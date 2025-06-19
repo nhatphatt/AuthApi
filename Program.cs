@@ -18,8 +18,23 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 builder.Services.AddControllers();
 
 // Database configuration
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") 
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? "Data Source=authapi.db"; // Default to SQLite for production
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (connectionString.Contains("Data Source=") || connectionString.EndsWith(".db"))
+    {
+        // Use SQLite for local development or when SQLite connection string is provided
+        options.UseSqlite(connectionString);
+    }
+    else
+    {
+        // Use SQL Server for other connection strings
+        options.UseSqlServer(connectionString);
+    }
+});
 
 // JWT configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -120,7 +135,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API V1");
-    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+    c.RoutePrefix = "swagger"; // Set Swagger UI at /swagger
 });
 
 // Only use HTTPS redirection in development
@@ -140,14 +155,19 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    
     try
     {
+        logger.LogInformation("Attempting to create database...");
         context.Database.EnsureCreated();
+        logger.LogInformation("Database created successfully.");
     }
     catch (Exception ex)
     {
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while creating the database.");
+        logger.LogError(ex, "An error occurred while creating the database. The application will continue to run but database features may not work.");
+        // Don't throw the exception - let the app continue to start
+        // This allows health checks to work even if database is unavailable
     }
 }
 
