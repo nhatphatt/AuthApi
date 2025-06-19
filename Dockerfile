@@ -21,9 +21,11 @@ WORKDIR /app
 # Copy the build output from the previous stage
 COPY --from=build /app/out .
 
-# Expose port
-EXPOSE 80
-EXPOSE 443
+# Expose port 8080 for Railway/cloud deployment
+EXPOSE 8080
+
+# Set environment variable for ASP.NET Core to listen on all interfaces
+ENV ASPNETCORE_URLS=http://+:8080
 
 # Set the entry point
-ENTRYPOINT ["dotnet", "AuthApi.dll"] 
+ENTRYPOINT ["dotnet", "AuthApi.dll"]

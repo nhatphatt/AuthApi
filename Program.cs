@@ -10,6 +10,10 @@ using AuthApi.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure port for cloud deployment (Railway, Heroku, etc.)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // Add services to the container
 builder.Services.AddControllers();
 
@@ -111,17 +115,19 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
+// Enable Swagger in all environments for API testing
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API V1");
+    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+});
+
+// Only use HTTPS redirection in development
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API V1");
-        c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-    });
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
