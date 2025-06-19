@@ -1,0 +1,13 @@
+**/.git
+**/.gitignore
+**/bin
+**/obj
+**/.vs
+**/.vscode
+**/node_modules
+**/.dockerignore
+**/Dockerfile
+**/README.md
+**/.env
+**/authapi.db*
+**/Migrations 
