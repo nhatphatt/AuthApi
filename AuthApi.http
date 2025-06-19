@@ -1,0 +1,155 @@
+@AuthApi_HostAddress = http://localhost:5288
+
+GET {{AuthApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+### Auth API Testing - CHATBOT AI SYSTEM
+
+@baseUrl = http://localhost:5288
+@token = 
+
+### ========== AUTHENTICATION ==========
+
+### Register a new user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123",
+  "role": "User"
+}
+
+### Register an admin user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123",
+  "role": "Admin"
+}
+
+### Login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+
+### ========== PAYMENT SYSTEM ==========
+
+### Get available subscription plans
+GET {{baseUrl}}/api/payment/plans
+Authorization: Bearer {{token}}
+
+### Get current subscription status
+GET {{baseUrl}}/api/payment/subscription
+Authorization: Bearer {{token}}
+
+### Check active subscription
+GET {{baseUrl}}/api/payment/active
+Authorization: Bearer {{token}}
+
+### Simulate Basic plan payment (for testing)
+POST {{baseUrl}}/api/payment/simulate/Basic
+Authorization: Bearer {{token}}
+
+### Simulate Premium plan payment (for testing)
+POST {{baseUrl}}/api/payment/simulate/Premium
+Authorization: Bearer {{token}}
+
+### Process actual payment
+POST {{baseUrl}}/api/payment/process
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "planType": "Basic",
+  "amount": 99000,
+  "paymentMethod": "CreditCard",
+  "transactionId": "TXN_123456789"
+}
+
+### Admin: Update subscription manually
+PUT {{baseUrl}}/api/payment/admin/update-subscription?userId=1&planType=Basic&isPaid=true
+Authorization: Bearer {{token}}
+
+### ========== CHATBOT AI ==========
+
+### Check chat permission and remaining tokens
+GET {{baseUrl}}/api/chat/permission
+Authorization: Bearer {{token}}
+
+### Get remaining tokens
+GET {{baseUrl}}/api/chat/tokens
+Authorization: Bearer {{token}}
+
+### Send message to AI chatbot
+POST {{baseUrl}}/api/chat/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "message": "Hello! Can you help me with programming questions?",
+  "model": "gpt-3.5-turbo"
+}
+
+### Send another message to test token consumption
+POST {{baseUrl}}/api/chat/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "message": "What is the difference between REST and GraphQL?",
+  "model": "gpt-3.5-turbo"
+}
+
+### Get chat history (page 1, 20 items)
+GET {{baseUrl}}/api/chat/history?page=1&pageSize=20
+Authorization: Bearer {{token}}
+
+### Get chat history (page 2, 5 items)
+GET {{baseUrl}}/api/chat/history?page=2&pageSize=5
+Authorization: Bearer {{token}}
+
+### ========== PROTECTED ENDPOINTS ==========
+
+### Get user profile (requires authentication)
+GET {{baseUrl}}/api/protected/profile
+Authorization: Bearer {{token}}
+
+### Get user data (User or Admin role required)
+GET {{baseUrl}}/api/protected/user
+Authorization: Bearer {{token}}
+
+### Get admin data (Admin role required)
+GET {{baseUrl}}/api/protected/admin
+Authorization: Bearer {{token}}
+
+### Test unauthorized access (without token)
+GET {{baseUrl}}/api/protected/profile
+
+### ========== TESTING SCENARIOS ==========
+
+### SCENARIO 1: Free User Workflow
+# 1. Register new user
+# 2. Check subscription status (should be Free with 100 tokens)
+# 3. Send messages until tokens exhausted
+# 4. Try to send more → Should be blocked
+
+### SCENARIO 2: Paid User Workflow  
+# 1. Register user
+# 2. Simulate payment for Basic plan
+# 3. Verify subscription status updated
+# 4. Send messages with increased token limit
+# 5. Check chat history
+
+### SCENARIO 3: Admin Management
+# 1. Login as admin
+# 2. Manually update user subscription
+# 3. Verify user gains access immediately
+
+###
