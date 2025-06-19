@@ -10,7 +10,7 @@ RUN dotnet restore
 
 # Copy source code and build the application
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish AuthApi.csproj -c Release -o out
 
 # Use the official .NET 8.0 runtime image for running
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
