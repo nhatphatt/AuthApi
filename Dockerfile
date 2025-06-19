@@ -1,5 +1,5 @@
-# Use the official .NET 8.0 SDK image for building
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Use the official .NET 9.0 SDK image for building
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 # Set working directory
 WORKDIR /app
@@ -12,8 +12,8 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish AuthApi.csproj -c Release -o out
 
-# Use the official .NET 8.0 runtime image for running
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Use the official .NET 9.0 runtime image for running
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 
 # Set working directory
 WORKDIR /app
