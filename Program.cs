@@ -42,12 +42,6 @@ var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException(
 
 // Add logging for debugging
 builder.Services.AddLogging();
-var tempProvider = builder.Services.BuildServiceProvider();
-var logger = tempProvider.GetRequiredService<ILogger<Program>>();
-logger.LogInformation($"Starting application on port: {port}");
-logger.LogInformation($"Environment: {builder.Environment.EnvironmentName}");
-logger.LogInformation($"JWT Issuer: {jwtSettings["Issuer"]}");
-logger.LogInformation($"Database Connection: {connectionString}");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -172,17 +166,17 @@ app.MapGet("/", () => new {
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var dbLogger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
     try
     {
-        logger.LogInformation("Attempting to create database...");
+        dbLogger.LogInformation("Attempting to create database...");
         context.Database.EnsureCreated();
-        logger.LogInformation("Database created successfully.");
+        dbLogger.LogInformation("Database created successfully.");
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "An error occurred while creating the database. The application will continue to run but database features may not work.");
+        dbLogger.LogError(ex, "An error occurred while creating the database. The application will continue to run but database features may not work.");
         // Don't throw the exception - let the app continue to start
         // This allows health checks to work even if database is unavailable
     }
