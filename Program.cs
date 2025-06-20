@@ -22,24 +22,33 @@ var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Data Source=authapi.db"; // Default to SQLite for production
 
+// Log connection string for debugging (hide password)
+var logConnectionString = connectionString.Length > 50 ? 
+    connectionString.Substring(0, 30) + "***" + connectionString.Substring(connectionString.Length - 10) : 
+    connectionString;
+Console.WriteLine($"[DEBUG] Connection String: {logConnectionString}");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     if (connectionString.Contains("Data Source=") || connectionString.EndsWith(".db"))
     {
         // Use SQLite for local development
+        Console.WriteLine("[DEBUG] Using SQLite");
         options.UseSqlite(connectionString);
     }
     else if (connectionString.StartsWith("mysql://") || 
              connectionString.Contains("MySQL") || 
              connectionString.Contains("mysql") ||
-             connectionString.Contains("Server=") && connectionString.Contains("Port="))
+             (connectionString.Contains("Server=") && connectionString.Contains("Port=")))
     {
         // Use MySQL for production
+        Console.WriteLine("[DEBUG] Using MySQL");
         options.UseMySQL(connectionString);
     }
     else
     {
         // Use SQL Server for other connection strings
+        Console.WriteLine("[DEBUG] Using SQL Server");
         options.UseSqlServer(connectionString);
     }
 });
@@ -167,7 +176,11 @@ app.MapGet("/", () => new {
     message = "AuthApi is running", 
     timestamp = DateTime.UtcNow,
     version = "1.0.0",
-    endpoints = new[] { "/api/health", "/swagger", "/api/auth" }
+    endpoints = new[] { "/api/health", "/swagger", "/api/auth" },
+    database = new {
+        connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")?.Substring(0, Math.Min(50, Environment.GetEnvironmentVariable("DATABASE_URL")?.Length ?? 0)) + "***",
+        hasConnection = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DATABASE_URL"))
+    }
 });
 
 // Create database if it doesn't exist
