@@ -25,7 +25,7 @@ namespace AuthApi.Data
                 entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.PasswordHash).IsRequired();
                 entity.Property(e => e.Role).IsRequired().HasMaxLength(20).HasDefaultValue("User");
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
             });
 
             // Configure Subscription entity
@@ -36,7 +36,7 @@ namespace AuthApi.Data
                 entity.Property(e => e.Amount).HasColumnType("decimal(10,2)");
                 entity.Property(e => e.PaymentMethod).HasMaxLength(100);
                 entity.Property(e => e.TransactionId).HasMaxLength(200);
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
                 // Foreign key relationship
                 entity.HasOne(e => e.User)
@@ -52,7 +52,7 @@ namespace AuthApi.Data
                 entity.Property(e => e.UserMessage).IsRequired();
                 entity.Property(e => e.AiResponse).IsRequired();
                 entity.Property(e => e.Model).HasMaxLength(100);
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
                 // Foreign key relationship
                 entity.HasOne(e => e.User)

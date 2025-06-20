@@ -29,7 +29,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         // Use SQLite for local development
         options.UseSqlite(connectionString);
     }
-    else if (connectionString.StartsWith("mysql://") || connectionString.Contains("MySQL") || connectionString.Contains("mysql"))
+    else if (connectionString.StartsWith("mysql://") || 
+             connectionString.Contains("MySQL") || 
+             connectionString.Contains("mysql") ||
+             connectionString.Contains("Server=") && connectionString.Contains("Port="))
     {
         // Use MySQL for production
         options.UseMySQL(connectionString);
