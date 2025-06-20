@@ -40,6 +40,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
 
+// Add logging for debugging
+builder.Services.AddLogging();
+var tempProvider = builder.Services.BuildServiceProvider();
+var logger = tempProvider.GetRequiredService<ILogger<Program>>();
+logger.LogInformation($"Starting application on port: {port}");
+logger.LogInformation($"Environment: {builder.Environment.EnvironmentName}");
+logger.LogInformation($"JWT Issuer: {jwtSettings["Issuer"]}");
+logger.LogInformation($"Database Connection: {connectionString}");
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -150,6 +159,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Add a simple root endpoint for debugging
+app.MapGet("/", () => new { 
+    message = "AuthApi is running", 
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0",
+    endpoints = new[] { "/api/health", "/swagger", "/api/auth" }
+});
 
 // Create database if it doesn't exist
 using (var scope = app.Services.CreateScope())
