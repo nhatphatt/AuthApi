@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # MySQL Database with persistent storage
+  mysql:
+    image: mysql:8.0
+    container_name: authapi-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: authapi
+      MYSQL_USER: authapi_user
+      MYSQL_PASSWORD: authapi_password
+    ports:
+      - "3306:3306"
+    volumes:
+      # Persistent storage - data will survive container restarts
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - authapi-network
+    restart: unless-stopped
+
+  # ASP.NET Core Application
+  authapi:
+    build: .
+    container_name: authapi-app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DATABASE_URL=mysql://authapi_user:authapi_password@mysql:3306/authapi
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - authapi-network
+    restart: unless-stopped
+
+# Persistent volume for MySQL data
+volumes:
+  mysql_data:
+    driver: local
+
+# Network for services communication
+networks:
+  authapi-network:
+    driver: bridge 

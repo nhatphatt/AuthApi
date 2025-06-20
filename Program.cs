@@ -26,8 +26,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     if (connectionString.Contains("Data Source=") || connectionString.EndsWith(".db"))
     {
-        // Use SQLite for local development or when SQLite connection string is provided
+        // Use SQLite for local development
         options.UseSqlite(connectionString);
+    }
+    else if (connectionString.StartsWith("mysql://") || connectionString.Contains("MySQL") || connectionString.Contains("mysql"))
+    {
+        // Use MySQL for production
+        options.UseMySQL(connectionString);
     }
     else
     {
