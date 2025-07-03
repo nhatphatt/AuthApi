@@ -17,6 +17,8 @@ namespace AuthApi.Models
         [StringLength(20)]
         public string Role { get; set; } = "User";
 
+        public int Tokens { get; set; } = 500; // Default tokens for new users
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 

@@ -42,6 +42,7 @@ namespace AuthApi.Services
                     Username = request.Username,
                     PasswordHash = passwordHash,
                     Role = request.Role,
+                    Tokens = 500, // Initial tokens for new users
                     CreatedAt = DateTime.UtcNow
                 };
 

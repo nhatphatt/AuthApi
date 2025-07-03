@@ -17,7 +17,7 @@ namespace AuthApi.DTOs
         public decimal Amount { get; set; } = 0;
         public string PaymentMethod { get; set; } = string.Empty;
         public int ChatTokensUsed { get; set; } = 0;
-        public int ChatTokensLimit { get; set; } = 100;
+        public int ChatTokensLimit { get; set; } = 500;
         public int RemainingTokens => ChatTokensLimit - ChatTokensUsed;
         public bool IsActive => IsPaid && ExpiresAt > DateTime.UtcNow;
         
