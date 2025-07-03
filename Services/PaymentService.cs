@@ -147,7 +147,7 @@ namespace AuthApi.Services
                         PlanType = "Free",
                         IsPaid = false,
                         ChatTokensUsed = 0,
-                        ChatTokensLimit = 500
+                        ChatTokensLimit = 100
                     };
                     _context.Subscriptions.Add(subscription);
                     await _context.SaveChangesAsync();
@@ -216,7 +216,7 @@ namespace AuthApi.Services
                         PlanType = planType,
                         IsPaid = isPaid,
                         ChatTokensUsed = 0,
-                        ChatTokensLimit = planType == "Free" ? 500 : _plans.ContainsKey(planType) ? _plans[planType].TokenLimit : 500
+                        ChatTokensLimit = planType == "Free" ? 100 : _plans.ContainsKey(planType) ? _plans[planType].TokenLimit : 100
                     };
                     _context.Subscriptions.Add(subscription);
                 }
@@ -230,7 +230,7 @@ namespace AuthApi.Services
                     // Update token limits based on new plan
                     if (planType == "Free")
                     {
-                        subscription.ChatTokensLimit = 500;
+                        subscription.ChatTokensLimit = 100;
                     }
                     else if (_plans.ContainsKey(planType))
                     {
@@ -318,7 +318,7 @@ namespace AuthApi.Services
                         Amount = item.subscription?.Amount ?? 0,
                         PaymentMethod = item.subscription?.PaymentMethod ?? string.Empty,
                         ChatTokensUsed = item.subscription?.ChatTokensUsed ?? 0,
-                        ChatTokensLimit = item.subscription?.ChatTokensLimit ?? 500,
+                        ChatTokensLimit = item.subscription?.ChatTokensLimit ?? 100,
                         
                         // Chat statistics
                         TotalChatMessages = chatStats?.TotalMessages ?? 0,
@@ -407,9 +407,9 @@ namespace AuthApi.Services
                 {
                     PlanType = "Free",
                     Price = 0,
-                    TokenLimit = 500,
+                    TokenLimit = 100,
                     DurationDays = 0,
-                    Features = new List<string> { "500 tokens", "Basic chat", "Community support" },
+                    Features = new List<string> { "100 tokens", "Basic chat", "Community support" },
                     TotalSubscribers = freeUsers,
                     ActiveSubscribers = freeUsers,
                     TotalRevenue = 0,

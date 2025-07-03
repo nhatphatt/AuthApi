@@ -28,7 +28,7 @@ namespace AuthApi.Models
         public string TransactionId { get; set; } = string.Empty;
 
         public int ChatTokensUsed { get; set; } = 0;
-        public int ChatTokensLimit { get; set; } = 500; // Free plan limit
+        public int ChatTokensLimit { get; set; } = 100; // Free plan limit
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
