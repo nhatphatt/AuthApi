@@ -144,9 +144,6 @@ namespace AuthApi.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasDefaultValue("User");
 
-                    b.Property<int>("Tokens")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 

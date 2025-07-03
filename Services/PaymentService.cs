@@ -147,7 +147,7 @@ namespace AuthApi.Services
                         PlanType = "Free",
                         IsPaid = false,
                         ChatTokensUsed = 0,
-                        ChatTokensLimit = 100
+                        ChatTokensLimit = 1000
                     };
                     _context.Subscriptions.Add(subscription);
                     await _context.SaveChangesAsync();
@@ -216,7 +216,7 @@ namespace AuthApi.Services
                         PlanType = planType,
                         IsPaid = isPaid,
                         ChatTokensUsed = 0,
-                        ChatTokensLimit = planType == "Free" ? 100 : _plans.ContainsKey(planType) ? _plans[planType].TokenLimit : 100
+                        ChatTokensLimit = planType == "Free" ? 1000 : _plans.ContainsKey(planType) ? _plans[planType].TokenLimit : 1000
                     };
                     _context.Subscriptions.Add(subscription);
                 }

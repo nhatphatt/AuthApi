@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250703095456_AddTokensToUserFinal")]
-    partial class AddTokensToUserFinal
+    [Migration("20250703164316_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,9 +146,6 @@ namespace AuthApi.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasDefaultValue("User");
-
-                    b.Property<int>("Tokens")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

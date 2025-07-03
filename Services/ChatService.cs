@@ -163,7 +163,7 @@ namespace AuthApi.Services
                         PlanType = "Free",
                         IsPaid = false,
                         ChatTokensUsed = 0,
-                        ChatTokensLimit = 100
+                        ChatTokensLimit = 1000
                     };
                     _context.Subscriptions.Add(subscription);
                     await _context.SaveChangesAsync();
@@ -196,7 +196,7 @@ namespace AuthApi.Services
 
                 if (subscription == null)
                 {
-                    return 100; // Default free tier tokens
+                    return 1000; // Default free tier tokens
                 }
 
                 return Math.Max(0, subscription.ChatTokensLimit - subscription.ChatTokensUsed);
