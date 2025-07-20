@@ -24,4 +24,4 @@ namespace AuthApi.Models
         public virtual ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
         public virtual ICollection<ChatHistory> ChatHistories { get; set; } = new List<ChatHistory>();
     }
-} 
+}

@@ -1,12 +1,12 @@
 # Auth API - ASP.NET Core Web API với JWT Authentication
 
-Dự án ASP.NET Core Web API hoàn chỉnh sử dụng C# với JWT Authentication, Entity Framework Core và SQLite.
+Dự án ASP.NET Core Web API hoàn chỉnh sử dụng C# với JWT Authentication, Entity Framework Core và MySQL database (Railway).
 
 ## 🚀 Tính năng
 
 - ✅ .NET 9
 - ✅ Kiến trúc rõ ràng: Models, DTOs, Data, Services, Interfaces, Controllers, Helpers
-- ✅ Entity Framework Core với SQLite database
+- ✅ Entity Framework Core với MySQL database (Railway)
 - ✅ JWT Authentication & Authorization
 - ✅ Mã hóa mật khẩu bằng BCrypt
 - ✅ API Register và Login
@@ -41,10 +41,14 @@ cd AuthApi
 dotnet restore
 ```
 
-### 2. Tạo và cập nhật database
+### 2. Cấu hình database
+
+Ứng dụng đã được cấu hình để sử dụng MySQL database trên Railway. Connection string đã được cấu hình trong `appsettings.json` và `appsettings.Production.json`.
 
 ```bash
-dotnet ef migrations add InitialCreate
+# Database schema đã được tạo sẵn trên Railway MySQL
+# Nếu cần tạo migration mới:
+dotnet ef migrations add <MigrationName>
 dotnet ef database update
 ```
 
@@ -221,9 +225,10 @@ Content-Type: application/json
 
 ### Database
 
-- **Type:** SQLite
-- **File:** `authapi.db` (tự động tạo)
-- **Connection String:** `Data Source=authapi.db`
+- **Type:** MySQL (Railway)
+- **Provider:** Pomelo.EntityFrameworkCore.MySql
+- **Connection String:** Configured in appsettings.json
+- **Auto-detection:** Application automatically detects MySQL connection string
 
 ## 🔐 Security Features
 
@@ -272,11 +277,11 @@ dotnet ef database update
 - .NET 9
 - ASP.NET Core Web API
 - Entity Framework Core
-- SQLite
+- MySQL (Pomelo provider)
 - JWT Bearer Authentication
 - BCrypt.Net
 - Swagger/OpenAPI
-- AutoMapper (có thể thêm)
+- Railway deployment
 
 ## 📞 Hỗ trợ
 
